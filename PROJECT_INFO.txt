@@ -3,7 +3,7 @@
                PathPilot — AI Career Assistant
 ================================================================================
 Generated on: 29 October 2026
-Project Type: Final-Year Academic Web Application (TY BSc IT / BE IT)
+Project Type: Final-Year Academic Web Application (TY BSc IT )
 ================================================================================
 
 

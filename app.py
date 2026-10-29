@@ -390,8 +390,9 @@ async def resume_upload(file: UploadFile = File(...), target_role: str = ""):
         raise HTTPException(
             status_code=400,
             detail=(
-                "No readable text found. If this is a scanned PDF, paste the "
-                "resume text into the Resume Review tab instead."
+                "We couldn't extract enough readable text from this PDF. "
+                "Try a text-based PDF instead of a scanned image, or use "
+                "the optional resume text box."
             ),
         )
 
