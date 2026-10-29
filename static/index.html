@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Career Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div><strong>PathPilot</strong><small>AI CAREER ASSISTANT</small></div>
+      </div>
+      <div class="nav-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+      <button class="nav-item" data-view="career"><span>✧</span> Career assessment</button>
+      <button class="nav-item" data-view="resume"><span>▤</span> Resume intelligence</button>
+      <button class="nav-item" data-view="interview"><span>◎</span> Interview studio</button>
+      <button class="nav-item" data-view="roadmap"><span>⌁</span> Learning roadmap</button>
+      <button class="nav-item" data-view="history"><span>◷</span> Saved reports</button>
+      <div class="sidebar-bottom">
+        <div class="secure-icon">✓</div>
+        <div><b>Private by design</b><small>API keys stay on the server.</small></div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CAREER INTELLIGENCE PLATFORM</div>
+          <h1 id="page-title">Your next chapter starts here.</h1>
+          <p id="page-subtitle">Turn your skills and interests into a practical career strategy.</p>
+        </div>
+        <div class="top-right"><span class="status-dot"></span><span id="system-status">Checking services…</span>
+          <div class="avatar">AI</div>
+        </div>
+      </header>
+      <section class="view active" id="view-overview">
+        <div class="hero">
+          <div class="hero-copy"><span class="pill light">✦ PERSONALIZED GUIDANCE</span>
+            <h2>Build a career that<br><em>fits your potential.</em></h2>
+            <p>Explore career matches, discover skill gaps, and turn your next goal into a roadmap you can actually
+              follow.</p><button class="btn btn-white" data-go="career">Start career assessment <span>↗</span></button>
+          </div>
+          <div class="hero-art">
+            <div class="orbit orbit1"></div>
+            <div class="orbit orbit2"></div>
+            <div class="orb-core">✦</div>
+            <div class="float-card card-a"><span class="mini-icon purple">↗</span>
+              <div><b>Career fit</b><small>Personalized insights</small></div>
+            </div>
+            <div class="float-card card-b"><span class="mini-icon mint">✓</span>
+              <div><b>Skill growth</b><small>Clear next steps</small></div>
+            </div>
+            <div class="float-card card-c"><span class="mini-icon gold">⌁</span>
+              <div><b>Roadmap</b><small>12-week action plan</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">YOUR TOOLKIT</div>
+            <h2>Everything you need to move forward</h2>
+          </div><span class="subtle">Four intelligent workflows</span>
+        </div>
+        <div class="feature-grid">
+          <button class="feature-card" data-go="career">
+            <div class="feature-icon lavender">✧</div><span class="feature-tag">01 / DISCOVER</span>
+            <h3>Career assessment</h3>
+            <p>Connect your education, interests and skills to realistic career paths.</p><span
+              class="feature-link">Build my profile ↗</span>
+          </button>
+          <button class="feature-card" data-go="resume">
+            <div class="feature-icon blue">▤</div><span class="feature-tag">02 / IMPROVE</span>
+            <h3>Resume intelligence</h3>
+            <p>Find weak bullets, missing evidence and role-specific improvements.</p><span class="feature-link">Review
+              my resume ↗</span>
+          </button>
+          <button class="feature-card" data-go="interview">
+            <div class="feature-icon mint">◎</div><span class="feature-tag">03 / PRACTISE</span>
+            <h3>Interview studio</h3>
+            <p>Prepare with tailored questions, answer frameworks and practice plans.</p><span
+              class="feature-link">Start practising ↗</span>
+          </button>
+          <button class="feature-card" data-go="roadmap">
+            <div class="feature-icon peach">⌁</div><span class="feature-tag">04 / GROW</span>
+            <h3>Learning roadmap</h3>
+            <p>Organize your learning into topics, projects and weekly milestones.</p><span class="feature-link">Plan my
+              growth ↗</span>
+          </button>
+        </div>
+        <div class="bottom-strip">
+          <div class="strip-symbol">✦</div>
+          <div><b>Built around your goals, not generic advice.</b>
+            <p>AI-generated suggestions are saved as reports so you can revisit your progress.</p>
+          </div><button class="btn btn-outline" data-go="history">View saved reports →</button>
+        </div>
+      </section>
+      <section class="view" id="view-career">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">01 / DISCOVER</div>
+            <h2>Career assessment</h2>
+            <p>Share your current profile to generate a structured, personalized career plan.</p>
+          </div><span class="pill">AI-POWERED</span>
+        </div>
+        <form id="career-form" class="form-card">
+          <div class="form-grid"><label>Full name<input name="full_name" placeholder="e.g. Alex Morgan" required
+                maxlength="100"></label><label>Education / qualification<input name="education"
+                placeholder="e.g. TY BSc IT, graduating 2027" required></label><label class="full">Interests and
+              preferred work<textarea name="interests" rows="3"
+                placeholder="What subjects, activities or problems interest you?" required></textarea></label><label
+              class="full">Current skills<textarea name="skills" rows="3"
+                placeholder="e.g. Python basics, HTML/CSS, communication, Excel"
+                required></textarea></label><label>Experience level<select name="experience_level">
+                <option>Student / Fresher</option>
+                <option>Internship experience</option>
+                <option>0–2 years</option>
+                <option>2+ years</option>
+              </select></label><label>Target role (optional)<input name="target_role"
+                placeholder="e.g. Data Analyst"></label><label>Study hours per week<select name="weekly_hours">
+                <option value="3">3 hours</option>
+                <option value="6" selected>6 hours</option>
+                <option value="10">10 hours</option>
+                <option value="15">15 hours</option>
+                <option value="20">20 hours</option>
+              </select></label></div><button class="btn btn-primary" type="submit">Generate my career strategy
+            <span>↗</span></button>
+          <p class="privacy-note">Your profile and generated report are stored in the configured project database.</p>
+        </form>
+        <div id="career-result" class="result-panel hidden"></div>
+      </section>
+      <section class="view" id="view-resume">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">02 / IMPROVE</div>
+            <h2>Resume intelligence</h2>
+            <p>Upload a text-based PDF or paste your resume to get practical, evidence-based feedback.</p>
+          </div><span class="pill">PDF + TEXT</span>
+        </div>
+        <div class="form-card">
+          <form id="resume-form"><label>Target role<input name="target_role"
+                placeholder="e.g. Junior Python Developer"></label>
+            <div class="upload-zone">
+              <div class="upload-icon">↑</div><b>Upload your resume PDF</b>
+              <p>Maximum 5 MB. Scanned image-only PDFs may not be readable.</p><input id="resume-file" type="file"
+                accept="application/pdf"><button type="button" id="upload-resume" class="btn btn-outline">Review
+                uploaded PDF</button>
+            </div>
+            <div class="or-divider">OR PASTE RESUME TEXT</div><label>Resume content<textarea name="text" rows="9"
+                placeholder="Paste your resume text here…"></textarea></label><button class="btn btn-primary"
+              type="submit">Analyze resume <span>↗</span></button>
+          </form>
+        </div>
+        <div id="resume-result" class="result-panel hidden"></div>
+      </section>
+      <section class="view" id="view-interview">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">03 / PRACTISE</div>
+            <h2>Interview studio</h2>
+            <p>Prepare for the role you want with structured questions and answer frameworks.</p>
+          </div><span class="pill">PRACTICE MODE</span>
+        </div>
+        <form id="interview-form" class="form-card">
+          <div class="form-grid"><label class="full">Target role<input name="target_role"
+                placeholder="e.g. Data Analyst Intern" required></label><label>Experience level<select
+                name="experience_level">
+                <option>Student / Fresher</option>
+                <option>Internship experience</option>
+                <option>0–2 years</option>
+                <option>2+ years</option>
+              </select></label><label>Difficulty<select name="difficulty">
+                <option>Mixed</option>
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select></label><label>Number of questions<select name="count">
+                <option value="5">5 questions</option>
+                <option value="8" selected>8 questions</option>
+                <option value="12">12 questions</option>
+              </select></label></div><button class="btn btn-primary" type="submit">Create interview pack
+            <span>↗</span></button>
+        </form>
+        <div id="interview-result" class="result-panel hidden"></div>
+      </section>
+      <section class="view" id="view-roadmap">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">04 / GROW</div>
+            <h2>Learning roadmap</h2>
+            <p>Convert a career goal into a sequence of topics, projects and checkpoints.</p>
+          </div><span class="pill">ACTION PLAN</span>
+        </div>
+        <form id="roadmap-form" class="form-card"><label>What do you want to learn or achieve?<textarea name="text"
+              rows="4"
+              placeholder="e.g. I know basic Python and SQL and want to become a data analyst in 6 months. I can study 7 hours per week."
+              required></textarea></label><label>Target role (optional)<input name="target_role"
+              placeholder="e.g. Data Analyst"></label><button class="btn btn-primary" type="submit">Build learning
+            roadmap <span>↗</span></button></form>
+        <div id="roadmap-result" class="result-panel hidden"></div>
+      </section>
+      <section class="view" id="view-history">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow">YOUR WORKSPACE</div>
+            <h2>Saved reports</h2>
+            <p>Revisit previously generated career plans and preparation reports.</p>
+          </div><button id="refresh-history" class="btn btn-outline">↻ Refresh</button>
+        </div>
+        <div id="history-list" class="history-list">
+          <div class="empty-state">Click refresh to load reports saved in your database.</div>
+        </div>
+      </section>
+      <footer><span>PATHPILOT · AI CAREER ASSISTANT</span><span>Guidance for your next step. Your decisions remain
+          yours.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="/static/app.js"></script>
+</body>
+
+</html>

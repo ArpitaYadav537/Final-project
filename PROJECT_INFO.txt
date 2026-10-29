@@ -1,0 +1,489 @@
+﻿================================================================================
+                    PROJECT INFORMATION DOCUMENT
+               PathPilot — AI Career Assistant
+================================================================================
+Generated on: 29 October 2026
+Project Type: Final-Year Academic Web Application (TY BSc IT / BE IT)
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+
+Project Name   : PathPilot — AI Career Assistant
+Application ID : AI Career Assistant (configurable via .env)
+Version        : 1.0.0
+Description    : A full-stack, AI-powered career guidance and skill-gap
+                 analysis platform designed to help students and early-career
+                 professionals plan their careers, improve their resumes,
+                 prepare for interviews, and build structured learning roadmaps.
+
+The platform uses Google Gemini AI to generate personalized, actionable
+career advice based on a user profile. All reports are stored in a
+cloud-hosted PostgreSQL database (Supabase) for later retrieval.
+
+
+--------------------------------------------------------------------------------
+2. PROJECT OBJECTIVES
+--------------------------------------------------------------------------------
+
+1. Generate personalized career recommendations from a structured user profile.
+2. Identify skill gaps and create actionable 12-week learning milestones.
+3. Provide role-specific resume feedback and interview practice material.
+4. Persist user profiles and AI-generated reports in a relational database
+   for later retrieval and review.
+5. Expose a clean REST API that can be extended with authentication, course
+   integrations, and analytics in future versions.
+
+
+--------------------------------------------------------------------------------
+3. TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+
+BACKEND
+  Language        : Python 3.10+
+  Framework       : FastAPI 0.115.0
+  Server          : Uvicorn (ASGI server with standard extras)
+  AI Integration  : Google Generative AI SDK (google-genai >= 1.0.0)
+  AI Model        : Gemini 2.5 Flash (configurable via .env)
+  Database Client : Supabase Python SDK (supabase >= 2.7.4)
+  PDF Extraction  : pypdf >= 5.0.0
+  Config Mgmt     : python-dotenv 1.0.1
+  Data Validation : Pydantic >= 2.9.2
+  File Uploads    : python-multipart >= 0.0.9
+
+FRONTEND
+  Language        : HTML5, CSS3, Vanilla JavaScript (ES2020+)
+  Rendering       : Single-Page Application (SPA) — no framework
+  Markdown Parser : Custom lightweight inline renderer (app.js)
+
+DATABASE
+  Provider        : Supabase (hosted PostgreSQL)
+  Database        : PostgreSQL (via Supabase cloud)
+
+DEPLOYMENT / RUNTIME
+  Platform        : Local development (Windows / macOS / Linux)
+  Run Command     : uvicorn app:app --reload
+  Default URL     : http://127.0.0.1:8000
+  API Docs URL    : http://127.0.0.1:8000/docs
+  Health Check    : http://127.0.0.1:8000/api/health
+
+
+--------------------------------------------------------------------------------
+4. PROJECT ARCHITECTURE
+--------------------------------------------------------------------------------
+
+  Browser (HTML/CSS/JS)
+    static/index.html, static/style.css, static/app.js
+         |
+         |  HTTP / REST API calls
+         v
+  FastAPI Backend (app.py)
+    Python 3.10+, Uvicorn ASGI Server
+         |                   |
+         v                   v
+  Google Gemini API     Supabase PostgreSQL DB
+  (AI generation)       (persistence)
+
+Data Flow:
+  1. User fills form in browser
+  2. JavaScript sends JSON POST to FastAPI endpoint
+  3. FastAPI builds an AI prompt from user data
+  4. Gemini API returns a Markdown-formatted career report
+  5. FastAPI saves the result to Supabase (career_reports table)
+  6. JSON response is returned to the browser
+  7. JavaScript renders the Markdown result in the UI
+
+
+--------------------------------------------------------------------------------
+5. FILE STRUCTURE
+--------------------------------------------------------------------------------
+
+ai-career-assistant/
+|
+|-- app.py                  Main FastAPI application (backend + API)
+|-- requirements.txt        Python package dependencies
+|-- .env                    Secret environment variables (NOT in git)
+|-- .env.example            Template for .env (safe to share)
+|-- .gitignore              Files excluded from version control
+|-- check_models.py         Helper script to verify Gemini models
+|-- README.md               Setup and usage documentation
+|-- PROJECT_INFO.txt        This file — complete project reference
+|
+|-- sql/
+|   `-- schema.sql          PostgreSQL DDL — creates all tables
+|
+|-- static/
+|   |-- index.html          Single-page frontend (HTML structure)
+|   |-- style.css           All UI styling (dark theme, responsive)
+|   `-- app.js              Frontend JS (API calls, routing, rendering)
+|
+`-- .venv/                  Python virtual environment (NOT in git)
+
+
+--------------------------------------------------------------------------------
+6. FEATURES / MODULES
+--------------------------------------------------------------------------------
+
+MODULE 1 — CAREER ASSESSMENT (01 / DISCOVER)
+  Endpoint : POST /api/career-plan
+  Form     : Full name, education, interests, skills, experience level,
+             target role (optional), study hours per week
+  Output   : Personalized career roadmap including:
+               - 3 suitable career path recommendations
+               - Skill gap analysis table
+               - 12-week weekly learning plan
+               - 3 portfolio project suggestions
+               - Recommended learning resources
+               - 30-day first action plan
+               - Risks and next steps
+  Database : Saves user profile to career_profiles;
+             saves AI report to career_reports.
+
+MODULE 2 — RESUME INTELLIGENCE (02 / IMPROVE)
+  Endpoints: POST /api/resume-review   (text input)
+             POST /api/resume-upload   (PDF upload, max 5 MB)
+  Input    : Resume text or text-based PDF + optional target role
+  Output   : Resume review report including:
+               - Overall assessment
+               - Strong points
+               - Issues to fix (prioritized)
+               - ATS/keyword alignment notes
+               - 3 before-and-after bullet rewrites
+               - Missing evidence to add
+               - Suggested skills to learn
+               - 5 tailoring actions
+  Notes    : PDF text extracted via pypdf; scanned PDFs not supported.
+
+MODULE 3 — INTERVIEW STUDIO (03 / PRACTISE)
+  Endpoint : POST /api/interview-prep
+  Input    : Target role, experience level, difficulty, question count (3-15)
+  Output   : Interview preparation pack including:
+               - Role-specific questions (default: 8)
+               - What each question tests
+               - Answer framework (STAR for behavioural questions)
+               - Follow-up question for each
+               - 1-day practice schedule
+               - 5 questions the candidate can ask the interviewer
+
+MODULE 4 — LEARNING ROADMAP (04 / GROW)
+  Endpoint : POST /api/course-roadmap
+  Input    : Career goal / context (free text) + optional target role
+  Output   : Structured learning roadmap including:
+               - Prerequisite check
+               - Ordered topics
+               - Hands-on practice tasks
+               - 3 portfolio milestones
+               - Recommended free learning resources
+               - Weekly checkpoints
+
+MODULE 5 — SAVED REPORTS
+  Endpoint : GET /api/history?limit=N  (1-50, default 10)
+  Output   : List of previously generated reports with ability to open
+             full report text in a new browser tab.
+
+MODULE 6 — SYSTEM HEALTH CHECK
+  Endpoint : GET /api/health
+  Output   : JSON showing AI configured, database configured, app name,
+             and active Gemini model name.
+
+
+--------------------------------------------------------------------------------
+7. API ENDPOINTS REFERENCE
+--------------------------------------------------------------------------------
+
+METHOD   ENDPOINT                DESCRIPTION
+------   --------                -----------
+GET      /                       Serves the frontend SPA (index.html)
+GET      /api/health             Service status and configuration check
+POST     /api/career-plan        Generate personalized career roadmap
+POST     /api/resume-review      Analyze resume text and give feedback
+POST     /api/resume-upload      Upload PDF resume for extraction + review
+POST     /api/interview-prep     Generate interview preparation pack
+POST     /api/course-roadmap     Build a structured learning roadmap
+GET      /api/history            Retrieve saved AI reports from database
+GET      /docs                   FastAPI Swagger UI (interactive API docs)
+GET      /redoc                  FastAPI ReDoc documentation
+
+
+--------------------------------------------------------------------------------
+8. DATABASE DESIGN
+--------------------------------------------------------------------------------
+
+TABLE: career_profiles
+  Column            Type          Notes
+  id                UUID (PK)     Auto-generated (gen_random_uuid)
+  full_name         TEXT          User full name
+  education         TEXT          Degree / qualification
+  interests         TEXT          Free-text interests
+  skills            TEXT          Free-text current skills
+  experience_level  TEXT          Default: 'Student / Fresher'
+  target_role       TEXT          Optional target job role
+  created_at        TIMESTAMPTZ   Auto-set to current timestamp
+
+TABLE: career_reports
+  Column            Type          Notes
+  id                UUID (PK)     Auto-generated (gen_random_uuid)
+  profile_id        UUID (FK)     References career_profiles.id (nullable)
+  report_type       TEXT          'career_plan', 'resume_review',
+                                  'interview_prep', 'learning_roadmap'
+  input_summary     JSONB         JSON snapshot of user inputs
+  ai_result         TEXT          Full Markdown from Gemini AI
+  model_name        TEXT          Gemini model used
+  created_at        TIMESTAMPTZ   Auto-set to current timestamp
+
+INDEXES:
+  career_reports_created_at_idx   On created_at DESC (for history queries)
+  career_reports_profile_id_idx   On profile_id (for joins)
+
+
+--------------------------------------------------------------------------------
+9. ENVIRONMENT CONFIGURATION (.env)
+--------------------------------------------------------------------------------
+
+Variable          Description
+GEMINI_API_KEY    Google AI Studio API key (required)
+                  Source: https://aistudio.google.com/apikey
+GEMINI_MODEL      Gemini model name (default: gemini-2.5-flash)
+SUPABASE_URL      Supabase project URL
+                  Format: https://your-project.supabase.co
+SUPABASE_KEY      Supabase service-role / backend secret key
+APP_NAME          Display name (default: AI Career Assistant)
+
+IMPORTANT: Never commit .env to version control.
+Never expose keys in browser JavaScript files.
+
+
+--------------------------------------------------------------------------------
+10. PYTHON DEPENDENCIES (requirements.txt)
+--------------------------------------------------------------------------------
+
+Package                Version         Purpose
+fastapi                0.115.0         Web framework and REST API
+uvicorn[standard]      0.30.6          ASGI server to run FastAPI
+google-genai           >= 1.0.0        Google Gemini AI client SDK
+supabase               >= 2.7.4        Supabase PostgreSQL cloud client
+python-dotenv          1.0.1           Load .env into os.environ
+pydantic               >= 2.9.2        Request/response data validation
+python-multipart       >= 0.0.9        Support for file upload (PDF)
+pypdf                  >= 5.0.0        Extract text from PDF resumes
+
+
+--------------------------------------------------------------------------------
+11. SETUP INSTRUCTIONS (Windows)
+--------------------------------------------------------------------------------
+
+STEP 1 — Extract project
+  Extract ZIP to D:\AI-Career-Assistant
+  Open folder in VS Code, open Terminal.
+
+STEP 2 — Create virtual environment
+  py -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+  (If blocked: use CMD and run .venv\Scripts\activate.bat)
+
+STEP 3 — Install dependencies
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+
+STEP 4 — Configure environment
+  Copy .env.example to .env and fill in real values:
+    GEMINI_API_KEY=your_real_key
+    GEMINI_MODEL=gemini-2.5-flash
+    SUPABASE_URL=https://your-project.supabase.co
+    SUPABASE_KEY=your_backend_secret_key
+    APP_NAME=AI Career Assistant
+
+STEP 5 — Set up database
+  Open Supabase Dashboard > SQL Editor
+  Paste all contents of sql/schema.sql and click Run
+  Confirm career_profiles and career_reports tables are created
+
+STEP 6 — Run the application
+  uvicorn app:app --reload
+
+STEP 7 — Open in browser
+  http://127.0.0.1:8000          Web application
+  http://127.0.0.1:8000/docs     Swagger API documentation
+  http://127.0.0.1:8000/api/health  System health check
+
+
+--------------------------------------------------------------------------------
+12. DEMONSTRATION FLOW (for viva / presentation)
+--------------------------------------------------------------------------------
+
+1. Open Overview page — show the dashboard and four feature modules.
+2. Open Career Assessment — fill in profile and click Generate.
+   Wait for Gemini AI to return the career roadmap.
+3. Show the result — career matches, skill gap table, 12-week plan,
+   portfolio projects, and first 30 days action plan.
+4. Open Saved Reports — click Refresh to show stored reports from DB.
+5. Open Resume Intelligence — paste a sample resume or upload a PDF.
+   Show the AI feedback including strong points and rewrites.
+6. Open Interview Studio — enter a target role and generate questions.
+   Show the STAR framework answers and practice schedule.
+7. Open Learning Roadmap — enter a career goal and generate a roadmap.
+8. Show http://127.0.0.1:8000/docs — Swagger UI with all endpoints.
+9. Show http://127.0.0.1:8000/api/health — JSON status confirmation.
+
+
+--------------------------------------------------------------------------------
+13. FRONTEND NAVIGATION (SPA Routing — app.js)
+--------------------------------------------------------------------------------
+
+View ID           Nav Label            Description
+view-overview     Overview             Landing / dashboard page
+view-career       Career assessment    Profile form + AI roadmap result
+view-resume       Resume intelligence  PDF upload / paste + AI feedback
+view-interview    Interview studio     Role/difficulty form + Q&A pack
+view-roadmap      Learning roadmap     Goal text form + roadmap output
+view-history      Saved reports        Database history list
+
+Navigation is handled in JavaScript (go() function). No page reloads —
+all transitions are CSS class toggles on section elements.
+
+
+--------------------------------------------------------------------------------
+14. SECURITY AND LIMITATIONS
+--------------------------------------------------------------------------------
+
+SECURITY
+  * API keys (GEMINI_API_KEY, SUPABASE_KEY) are server-side only.
+  * Keys are loaded from .env — never exposed in JavaScript.
+  * .env is in .gitignore and must not be committed.
+  * The Supabase service-role key bypasses RLS — demo only.
+
+LIMITATIONS
+  * No user authentication — all users share one data namespace.
+  * No rate limiting — AI endpoint can be called freely.
+  * No request logging beyond Supabase row timestamps.
+  * Scanned (image-only) PDFs are not supported by pypdf.
+  * AI suggestions are planning support, not job guarantees.
+  * Gemini model names change; update GEMINI_MODEL in .env if needed.
+
+FOR PRODUCTION
+  * Add Supabase Auth + user_id columns + per-user RLS policies.
+  * Add rate limiting (e.g., slowapi).
+  * Add request logging and data retention controls.
+  * Serve over HTTPS via a reverse proxy (nginx, Caddy).
+
+
+--------------------------------------------------------------------------------
+15. PYDANTIC REQUEST MODELS (app.py)
+--------------------------------------------------------------------------------
+
+CareerRequest     (Career plan form inputs)
+  full_name         str  (1-100 chars, required)
+  education         str  (2-200 chars, required)
+  interests         str  (2-1000 chars, required)
+  skills            str  (1-1500 chars, required)
+  experience_level  str  (default: "Student / Fresher")
+  target_role       str  (optional, max 150 chars)
+  weekly_hours      int  (1-60, default: 6)
+
+TextRequest       (Resume review / learning roadmap)
+  text              str  (10-12000 chars, required)
+  target_role       str  (optional, max 150 chars)
+
+InterviewRequest  (Interview preparation)
+  target_role       str  (2-150 chars, required)
+  experience_level  str  (default: "Student / Fresher")
+  difficulty        str  (default: "Mixed")
+  count             int  (3-15, default: 8)
+
+
+--------------------------------------------------------------------------------
+16. AI PROMPT STRATEGY
+--------------------------------------------------------------------------------
+
+Career Plan    — Includes full user profile JSON; instructs Gemini to act
+                 as "PathPilot" career coach; specifies 7 Markdown sections.
+
+Resume Review  — Includes resume text and target role; requests 8 specific
+                 Markdown sections including before/after bullet rewrites.
+
+Interview Prep — Specifies role, level, difficulty, count; requests STAR
+                 framework for behavioral questions + 1-day practice plan.
+
+Learning Roadmap — Includes career goal text; requests prerequisite check,
+                   ordered topics, milestones, and free resource links.
+
+All prompts instruct the AI to:
+  * Use clean Markdown formatting
+  * Not fabricate information or credentials
+  * Not guarantee employment outcomes
+
+
+--------------------------------------------------------------------------------
+17. KEY DESIGN DECISIONS
+--------------------------------------------------------------------------------
+
+1. FastAPI chosen for automatic Swagger docs, async support, and Pydantic
+   validation — suitable for academic demonstration.
+
+2. Vanilla JS frontend (no React/Vue) to minimize dependencies and keep
+   the project self-contained for academic submission.
+
+3. Supabase used as PostgreSQL host to avoid local database installation,
+   enabling easy demo without local DB setup.
+
+4. Gemini model is configurable via .env so the demo adapts to quota/model
+   availability without code changes.
+
+5. PDF extraction done server-side (pypdf) to avoid sending raw binary to
+   the AI API directly.
+
+6. Lazy initialization of Supabase and Gemini clients — connections created
+   only on first use, preventing startup errors if .env is incomplete.
+
+7. Skills and interests stored as plain TEXT (not PostgreSQL text[] array)
+   to avoid type conversion issues in the demo schema.
+
+
+--------------------------------------------------------------------------------
+18. QUICK COMMAND REFERENCE
+--------------------------------------------------------------------------------
+
+Create virtual environment     : py -m venv .venv
+Activate venv (PowerShell)     : .\.venv\Scripts\Activate.ps1
+Activate venv (CMD)            : .venv\Scripts\activate.bat
+Install dependencies           : pip install -r requirements.txt
+Run application                : uvicorn app:app --reload
+Run on custom port             : uvicorn app:app --reload --port 8080
+Check available Gemini models  : python check_models.py
+Open app                       : http://127.0.0.1:8000
+Open API docs                  : http://127.0.0.1:8000/docs
+Health check                   : http://127.0.0.1:8000/api/health
+
+
+--------------------------------------------------------------------------------
+19. PROJECT SUMMARY / ABSTRACT
+--------------------------------------------------------------------------------
+
+PathPilot is an AI-powered career intelligence platform built as a final-year
+project. It integrates Google Gemini AI with a FastAPI backend and a Supabase
+PostgreSQL database to deliver four intelligent career services:
+
+  (1) Personalized Career Planning — converts a student education, skills,
+      and interests into a structured 12-week roadmap with career matches,
+      portfolio project ideas, and learning resources.
+
+  (2) Resume Intelligence — reviews resume text or PDFs against a target
+      role, highlighting weaknesses, keyword gaps, and improved bullets.
+
+  (3) Interview Studio — generates tailored interview questions with answer
+      frameworks (STAR method) and a structured practice schedule.
+
+  (4) Learning Roadmap — converts a free-text career goal into an ordered
+      curriculum with weekly checkpoints and milestone projects.
+
+All AI-generated reports are stored in a cloud database and can be revisited
+through the Saved Reports view. The frontend is a responsive single-page
+application with no external framework dependency. The backend exposes a
+documented REST API via Swagger UI, making it extensible for authentication,
+course data integration, and analytics in future iterations.
+
+================================================================================
+                         END OF PROJECT INFORMATION
+================================================================================
